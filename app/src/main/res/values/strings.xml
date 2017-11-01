@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">latchenkov_test</string>
+    <string name="photo">Photo №</string>
+    <string name="hint">Введите ID и подтвердите</string>
+    <string name="btnConfirm">Подтвердить</string>
+
+</resources>
