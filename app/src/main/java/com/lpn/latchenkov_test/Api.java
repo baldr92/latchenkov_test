@@ -10,7 +10,7 @@ import retrofit2.http.Path;
  * Created by Paul on 31.10.2017.
  */
 
-public interface JsonPlaceHolder {
+public interface Api {
     @GET("/posts{id}")
-    Call<List<JsonPosts>> getData(@Path("id") int id);
+    Post getPost(@Path("id") int id);
 }

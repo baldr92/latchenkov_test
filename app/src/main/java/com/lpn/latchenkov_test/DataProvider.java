@@ -10,18 +10,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Paul on 31.10.2017.
  */
 
-public class ContollerPosts {
+public class DataProvider {
     static final String BASE_URL = "https://jsonplaceholder.typicode.com/";
 
-    public static JsonPlaceHolder getApi() {
+    private Api api;
+
+    public void initApi() {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
-        Retrofit retrofit = new Retrofit.Builder()
+        api = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
-        return jsonPlaceHolder;
+                .build()
+                .create(Api.class);
+    }
+
+    public Api getApi() {
+        return api;
     }
 }

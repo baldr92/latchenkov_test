@@ -7,19 +7,15 @@ package com.lpn.latchenkov_test;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class JsonPosts {
+public class Post {
 
     @SerializedName("userId")
-    @Expose
     private Integer userId;
     @SerializedName("id")
-    @Expose
     private Integer id;
     @SerializedName("title")
-    @Expose
     private String title;
     @SerializedName("body")
-    @Expose
     private String body;
 
     public Integer getUserId() {

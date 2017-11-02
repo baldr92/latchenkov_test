@@ -1,25 +1,42 @@
 package com.lpn.latchenkov_test;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 /**
  * Created by Paul on 30.10.2017.
  */
 
-public class ObjectsAdapter extends RecyclerView.Adapter<ObjectsAdapter.ViewHolder> {
+public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
 
+    DataState state;
+    Context context;
+    PostGetListener postGetListener;
+
+    public CardsAdapter(Context context) {
+        this.context = context;
+    }
+
+    public void setPostGetListener(PostGetListener postGetListener) {
+        this.postGetListener = postGetListener;
+    }
+
+    public void setData(DataState state) {
+        this.state = state;
+    }
 
     @Override
-    public ObjectsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //загружаем разметку в зависимости от типа
         //и получаем нужный холдер
-        ObjectsAdapter.ViewHolder viewHolder = null;   //возможно из-за этого нулла может быть ошибка !!!!
+        CardsAdapter.ViewHolder viewHolder = null;   //возможно из-за этого нулла может быть ошибка !!!!
         CardView itemLayoutView;
 
         switch (viewType) {
@@ -52,43 +69,35 @@ public class ObjectsAdapter extends RecyclerView.Adapter<ObjectsAdapter.ViewHold
         //заполняем заданные представления данными
         switch (this.getItemViewType(position)) {
             case 0:
-
                 CardView cardView = holder.cardview;
-                EditText editText = (EditText) cardView.findViewById(R.id.edit_post);
+                final EditText editText = (EditText) cardView.findViewById(R.id.edit_post);
                 TextView textView = (TextView) cardView.findViewById(R.id.text_posts);
+                Button action = new Button(context);
+                // button
+                action.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String id = editText.getText().toString();
+                        postGetListener.getPost(Integer.valueOf(id));
+                    }
+                });
                 String idText = editText.getText().toString();
                 int id = Integer.parseInt(idText);
                 textView.setText(id);
 
         }
-
     }
 
     @Override
     public int getItemCount() {
-        //возвращаем кол-во вариантов в наборе данных
-
+        return 1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
-            return 0;
-        }
-        if (position == 1) {
-            return 1;
-        }
-        if (position == 2) {
-            return 2;
-        }
-        if (position == 3) {
-            return 3;
-        } else {
-            return 4;
-        }
+        ItemType type = ItemType.getFromValue(position);
+        return type.getValue();
     }
-
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         //определяем класс ViewHolder
@@ -99,4 +108,34 @@ public class ObjectsAdapter extends RecyclerView.Adapter<ObjectsAdapter.ViewHold
         }
     }
 
+    public enum ItemType {
+        POSTS(0),
+        COMMENTS(1),
+        USERS(2),
+        PHOTOS(3),
+        TODOS(4);
+
+        int value;
+
+        ItemType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        static ItemType getFromValue(int value) {
+            for (ItemType type : ItemType.values()) {
+                if (type.getValue() == value) {
+                    return type;
+                }
+            }
+            return POSTS;
+        }
+    }
+
+    public interface PostGetListener {
+        void getPost(int id);
+    }
 }
